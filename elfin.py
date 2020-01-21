@@ -16,6 +16,8 @@ from typing import Dict, Any
 import docopt  # type: ignore
 
 import log
+import util
+import Elf
 
 
 # Constants
@@ -26,20 +28,24 @@ LOG_FILE = 'LOG.txt'
 # Global variables
 
 class Globals:
-    log: bool
+    log:  bool
+    file: str
 
 
 g = Globals()
 g.log = False
+g.file = ''
 
 
 def main() -> None:
     args = docopt.docopt(__doc__, version=VERSION)
-    print(args)
+    # print(args)
     save_cmd_line(args)
     if g.log:
         log.log_open(LOG_FILE)
-    # Interesting stuff goes here
+    ok, err = Elf.is_elf64_file(g.file)
+    if not ok:
+        util.fatal(f"cannot open or init ELF. Error: {err}")
     if g.log:
         log.log_close()
 
@@ -47,6 +53,7 @@ def main() -> None:
 def save_cmd_line(args: Dict[str, Any]) -> None:
     if args['--log']:
         g.log = True
+    g.file = args['ELF']
 
 
 if __name__ == '__main__':

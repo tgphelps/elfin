@@ -4,17 +4,18 @@ Elf.py is a module for reading and decoding Intel x64 ELF files,
 both executable and relocatable.
 """
 
+from typing import Tuple
+
+
 # Constants
 HDR_SIZE = 64
-
-from typing import Tuple
 
 
 def is_elf64_file(fname: str) -> Tuple[bool, int]:
     """
     Determines whether fname is an ELF file or not.
 
-    Returns (True, 0) if it is, and (False, <reason>) if not.
+    Returns (True, 0) if it is, and (False, <err>) if not.
     """
     try:
         with open(fname, 'rb') as f:
@@ -34,9 +35,12 @@ def is_elf64_file(fname: str) -> Tuple[bool, int]:
                 if hdr[7] != 0 or hdr[8] != 0:
                     return False, 7
                 return True, 0
-    except:
+    except IOError:
         return False, 1  # failed to read file
 
+
 if __name__ == '__main__':
+    good, reason = is_elf64_file('bad')
+    print(f'status = {good}, reason = {reason}')
     good, reason = is_elf64_file('tests/hello')
     print(f'status = {good}, reason = {reason}')
