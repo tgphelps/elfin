@@ -22,6 +22,17 @@ def is_elf64_file(fname: str) -> Tuple[bool, int]:
             if len(hdr) != HDR_SIZE:
                 return False, 2  # header read was short
             else:
+                magic = hdr[0:4]
+                if magic != b'\x7fELF':
+                    return False, 3
+                if hdr[4] != 2:
+                    return False, 4
+                if hdr[5] != 1:
+                    return False, 5
+                if hdr[6] != 1:
+                    return False, 6
+                if hdr[7] != 0 or hdr[8] != 0:
+                    return False, 7
                 return True, 0
     except:
         return False, 1  # failed to read file
