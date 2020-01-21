@@ -28,6 +28,7 @@ LOG_FILE = 'LOG.txt'
 class Globals:
     log: bool
 
+
 g = Globals()
 g.log = False
 
