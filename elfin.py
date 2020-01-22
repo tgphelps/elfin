@@ -46,6 +46,8 @@ def main() -> None:
     ok, err = Elf.is_elf64_file(g.file)
     if not ok:
         util.fatal(f"cannot open or init ELF. Error: {err}")
+    elf = Elf.Elf(g.file)
+    elf.close()
     if g.log:
         log.log_close()
 
