@@ -49,7 +49,7 @@ def main() -> None:
         log.log_open(LOG_FILE)
     ok, err = Elf.is_elf64_file(g.file)
     if not ok:
-        util.fatal(f"cannot open or init ELF. Error: {err}")
+        util.fatal(f"cannot open or init ELF {g.file}. Error: {err}")
     elf = Elf.Elf(g.file)
     elf.print_elf_hdr()
     elf.close()
