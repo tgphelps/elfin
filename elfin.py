@@ -17,6 +17,8 @@ import docopt  # type: ignore
 
 import log
 import util
+import sys
+
 import Elf
 
 
@@ -38,6 +40,8 @@ g.file = ''
 
 
 def main() -> None:
+    if not (sys.version_info.major == 3 and sys.version_info.minor >= 8):
+        util.fatal("Python 3.8 or above is required.")
     args = docopt.docopt(__doc__, version=VERSION)
     # print(args)
     save_cmd_line(args)
@@ -47,6 +51,7 @@ def main() -> None:
     if not ok:
         util.fatal(f"cannot open or init ELF. Error: {err}")
     elf = Elf.Elf(g.file)
+    elf.print_elf_hdr()
     elf.close()
     if g.log:
         log.log_close()

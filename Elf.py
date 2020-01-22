@@ -7,6 +7,7 @@ both executable and relocatable.
 from typing import Tuple
 
 import struct
+import sys
 
 # Constants
 HDR_SIZE = 64
@@ -81,6 +82,26 @@ class Elf:
         self.e_shentsize = k
         self.e_shnum = l
         self.e_shstrndx = m
+
+    def print_elf_hdr(self, out=sys.stdout):
+        print(f"{self.ei_class=}")
+        print(f"{self.ei_data=}")
+        print(f"{self.ei_version=}")
+        print(f"{self.ei_osabi=}")
+        print(f"{self.ei_abiversion=}")
+        print(f"{self.e_type=}")
+        print(f"{self.e_machine=}")
+        print(f"{self.e_version=}")
+        print(f"{self.e_entry=:#010x}")
+        print(f"{self.e_phoff=:#010x}")
+        print(f"{self.e_shoff=:#010x}")
+        print(f"{self.e_flags=:#06x}")
+        print(f"{self.e_ehsize=}")
+        print(f"{self.e_phentsize=}")
+        print(f"{self.e_phnum=}")
+        print(f"{self.e_shentsize=}")
+        print(f"{self.e_shnum=}")
+        print(f"{self.e_shstrndx=}")
 
     def close(self) -> None:
         self.elf.close()
