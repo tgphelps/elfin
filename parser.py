@@ -32,7 +32,8 @@ class ElfParser(Parser):
         return ('print', p[1])
 
     @_('DUMP entry',
-       'DUMP range')
+       'DUMP range',
+       'DUMP HDR')
     def dump_stmt(self, p):
         return ('dump', p[1])
 
