@@ -11,4 +11,9 @@ Elfin reads commands from stdin and writes to stdout, for now.
 
 Commands
 --------
-    show hdr
+    p hdr | pht | sht
+    d hdr | pht NUM | sht NUM | HEX HEX
+    help
+    q
+
+tokens: print dump quit help hdr pht sht hexnum number
