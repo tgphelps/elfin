@@ -12,8 +12,32 @@ Elfin reads commands from stdin and writes to stdout, for now.
 Commands
 --------
     p hdr | pht | sht
-    d hdr | pht NUM | sht NUM | HEX HEX
-    help
-    q
+    ('print', 'what')
 
-tokens: print dump quit help hdr pht sht hexnum number
+    d hdr | pht NUM | sht NUM | HEX HEX
+    ('dump', 'hdr')
+    ('dump', 'what', which)
+    ('dumphex', start, count)
+    help
+    ('help')
+
+    q
+    ('quit')
+
+cmd -> p-cmd | d-cmd | help-stmt | quit-stmt
+
+help-stmt -> HELP
+
+quit-stmt -> QUIT
+
+p-cmd -> PRINT tbl
+
+tbl -> HDR | PHT | SHT
+
+d-cmd -> DUMP entry
+         DUMP range
+
+entry -> PHT NUM
+         SHT NUM
+
+range -> NUM NUM

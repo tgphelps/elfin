@@ -6,13 +6,20 @@ from sly import Lexer
 
 
 class ElfLexer(Lexer):
-    tokens = {ID, PRINT, DUMP, QUIT, HELP, HDR, PHT, SHT, HEXNUM, NUMBER}
+    tokens = {ID, PRINT, DUMP, QUIT, HELP, HDR, PHT, SHT, NUMBER}
 
     ignore = ' \t'
 
     ID = r'[a-zA-Z][a-zA-z0-9]*'
-    HEXNUM = r'0[0-9a-fA-F]+'
-    NUMBER = r'\d+'
+
+    @_(r'0[0-9a-fA-F]+',
+       r'\d+')
+    def NUMBER(self, t):
+        if t.value.startswith('0'):
+            t.value = int(t.value, 16)
+        else:
+            t.value = int(t.value)
+        return t
 
     ID['p'] = PRINT
     ID['d'] = DUMP
@@ -34,13 +41,13 @@ def main():
         "p sht",
         "q",
         "help",       
-        "d 07f 012FD"
+        "d 07f 999"
         ]
     lexer = ElfLexer()
     for s in data:
         for tok in lexer.tokenize(s):
-            print('type=%r, value=%r, len=%r' %
-                  (tok.type, tok.value, len(tok.value)))
+            print('type=%r, value=%r, type=%r' %
+                  (tok.type, tok.value, type(tok.value)))
 
 
 if __name__ == '__main__':
