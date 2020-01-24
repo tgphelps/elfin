@@ -5,6 +5,7 @@ import Elf
 import Hex
 import lexer
 import parser
+import util
 
 
 class Globals:
@@ -53,9 +54,24 @@ def cmd_dump(obj: Any) -> None:
     # obj can be a string or a tuple
     print(f"dump command: {obj}")
     if obj == 'hdr':
-        Hex.dump(g.elf.hdr, len(g.elf.hdr))
+        Hex.dump(g.elf.hdr)
     else:
-        assert False
+        tbl = obj[0]
+        ent = obj[1]
+        if tbl == 'sht':
+            data = g.elf.get_shent(ent)
+            if len(data) == 0:
+                util.error("no such SHT entry")
+            else:
+                Hex.dump(data)
+        elif tbl == 'pht':
+            data = g.elf.get_phent(ent)
+            if len(data) == 0:
+                util.error("no such PHT entry")
+            else:
+                Hex.dump(data)
+        else:
+            assert False
 
 
 func = {

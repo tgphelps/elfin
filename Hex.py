@@ -40,9 +40,11 @@ class Dumper:
             return addr + hex + '  ' + ''.join(asc)
 
 
-def dump(buff: bytes, size: int, out=sys.stdout):
+def dump(buff: bytes, size=0, out=sys.stdout):
     "Print one buffer of any size, in lines of LINESIZE bytes"
     offset = 0
+    if size == 0:
+        size = len(buff)
     dumper = Dumper()
     while size:
         this = min(size, 16)
