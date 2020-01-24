@@ -46,6 +46,12 @@ def cmd_print(obj: str) -> None:
     print(f"print command: {obj}")
     if obj == 'hdr':
         g.elf.print_elf_hdr()
+    elif obj == 'sht':
+        for n in range(g.elf.e_shnum):
+            g.elf.print_sht_entry(n, 0)
+    elif obj == 'pht':
+        for n in range(g.elf.e_phnum):
+            g.elf.print_pht_entry(n, 0)
     else:
         assert False
 

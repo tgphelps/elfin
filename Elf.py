@@ -121,7 +121,7 @@ class Elf:
         offset = n * size
         return self.pht[offset: offset + size]
 
-    def print_elf_hdr(self, out=sys.stdout):
+    def print_elf_hdr(self, out=sys.stdout) -> None:
         print(f"{self.ei_class=}")
         print(f"{self.ei_data=}")
         print(f"{self.ei_version=}")
@@ -144,6 +144,44 @@ class Elf:
     def close(self) -> None:
         self.elf.close()
         # self.elf = None (type error)
+
+    def print_sht_entry(self, n: int, how: int) -> None:
+        ent = self.get_shent(n)
+        a, b, c, d, e, f, g, h, i, j = \
+            struct.unpack('<IIQQQQIIQQ', ent)
+        sh_name = a
+        sh_type = b
+        sh_flags = c
+        sh_addr = d
+        sh_offset = e
+        sh_size = f
+        sh_link = g
+        sh_info = h
+        sh_addralign = i
+        sh_entsize = j
+
+        if how == 0:
+            print(f"{n}: name={sh_name} type={sh_type} flags={sh_flags:#010x}")
+        else:
+            assert False
+
+    def print_pht_entry(self, n: int, how: int) -> None:
+        ent = self.get_phent(n)
+        a, b, c, d, e, f, g, h = \
+            struct.unpack("<IIQQQQQQ", ent)
+        p_type = a
+        p_flags = b
+        p_offset = c
+        p_vaddr = d
+        _ = e
+        p_filesz = f
+        p_memsz = g
+        p_align = h
+
+        if how == 0:
+            print(f"{n}: type={p_type} flags={p_flags:#010x} off={p_offset:#010x}")
+        else:
+            assert False
 
 
 if __name__ == '__main__':
