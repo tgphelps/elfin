@@ -2,6 +2,7 @@
 from typing import Tuple, Any
 
 import Elf
+import Hex
 import lexer
 import parser
 
@@ -15,6 +16,8 @@ g = Globals()
 
 def run(elf: Elf.Elf) -> None:
     g.elf = elf
+    g.elf.read_sht()
+    g.elf.read_pht()
     lex = lexer.ElfLexer()  # type: ignore
     par = parser.ElfParser()  # type: ignore
     while True:
@@ -49,6 +52,10 @@ def cmd_print(obj: str) -> None:
 def cmd_dump(obj: Any) -> None:
     # obj can be a string or a tuple
     print(f"dump command: {obj}")
+    if obj == 'hdr':
+        Hex.dump(g.elf.hdr, len(g.elf.hdr))
+    else:
+        assert False
 
 
 func = {

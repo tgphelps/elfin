@@ -56,6 +56,8 @@ class Elf:
     will throw an exception if the file passed to __init__ isn't a proper ELF.
     """
     def __init__(self, fname: str):
+        self.sht: bytes
+        self.pht: bytes
         self.elf = open(fname, 'rb')
         self.hdr = self.elf.read(HDR_SIZE)
         self.e_ident = self.hdr[0:16]
@@ -90,6 +92,24 @@ class Elf:
         self.e_shentsize = k
         self.e_shnum = l
         self.e_shstrndx = m
+
+    def read_sht(self):
+        print("read sht")
+        sht_size = self.e_shnum * self.e_shentsize
+        assert sht_size > 0
+        self.elf.seek(self.e_shoff, 0)
+        self.sht = self.elf.read(sht_size)
+        assert len(self.sht) == sht_size
+
+    def read_pht(self):
+        print("read pht")
+        if self.e_phnum > 0:
+            pht_size = self.e_phnum * self.e_phentsize
+            self.elf.seek(self.e_shoff, 0)
+            self.pht = self.elf.read(pht_size)
+            assert len(self.pht) == pht_size
+        else:
+            print("NO PHT")
 
     def print_elf_hdr(self, out=sys.stdout):
         print(f"{self.ei_class=}")
