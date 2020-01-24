@@ -19,11 +19,11 @@ class ElfParser(Parser):
     @_('HELP',
        'HELP ID')
     def help_stmt(self, p):
-        return (p[0],)
+        return (p[0], None)
 
     @_('QUIT')
     def quit_stmt(self, p):
-        return (p[0],)
+        return ('quit', None)
 
     @_('PRINT HDR',
        'PRINT PHT',
@@ -44,7 +44,7 @@ class ElfParser(Parser):
 
     @_('NUMBER NUMBER')
     def range(self, p):
-        return ('range', p[0], p[1])
+        return (p[0], p[1])
 
 
 if __name__ == '__main__':

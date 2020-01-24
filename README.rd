@@ -17,7 +17,7 @@ Commands
     d hdr | pht NUM | sht NUM | HEX HEX
     ('dump', 'hdr')
     ('dump', 'what', which)
-    ('dumphex', start, count)
+    ('dump', ('range', start, count))
     help
     ('help')
 

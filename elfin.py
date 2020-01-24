@@ -20,6 +20,7 @@ import util
 import sys
 
 import Elf
+import commands
 
 
 # Constants
@@ -51,7 +52,9 @@ def main() -> None:
     if not ok:
         util.fatal(f"cannot open or init ELF {g.file}. Error: {err}")
     elf = Elf.Elf(g.file)
-    elf.print_elf_hdr()
+
+    commands.run(elf)
+
     elf.close()
     if g.log:
         log.log_close()
