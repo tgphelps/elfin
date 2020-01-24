@@ -105,7 +105,7 @@ class Elf:
         print("read pht")
         if self.e_phnum > 0:
             pht_size = self.e_phnum * self.e_phentsize
-            self.elf.seek(self.e_shoff, 0)
+            self.elf.seek(self.e_phoff, 0)
             self.pht = self.elf.read(pht_size)
             assert len(self.pht) == pht_size
         else:
@@ -179,7 +179,9 @@ class Elf:
         p_align = h
 
         if how == 0:
-            print(f"{n}: type={p_type} flags={p_flags:#010x} off={p_offset:#010x}")
+            print(f"{n}: type={p_type:#0x} flags={p_flags:#010x} "
+                  f"off={p_offset:#010x} vaddr={p_vaddr:#010x} "
+                  f"memsz={p_memsz:#010x}")
         else:
             assert False
 
