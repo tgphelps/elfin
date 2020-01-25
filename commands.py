@@ -15,6 +15,19 @@ class Globals:
 g = Globals()
 
 
+def run_cmd(cmd: str, elf: Elf.Elf) -> None:
+    g.elf = elf
+    g.elf.read_sht()
+    g.elf.read_pht()
+    lex = lexer.ElfLexer()  # type: ignore
+    par = parser.ElfParser()  # type: ignore
+    code: Tuple[Any, ...] = par.parse(lex.tokenize(cmd))
+    assert code
+    handler = code[0]
+    args = code[1]
+    func[handler](args)
+
+
 def run(elf: Elf.Elf) -> None:
     g.elf = elf
     g.elf.read_sht()
@@ -24,15 +37,15 @@ def run(elf: Elf.Elf) -> None:
     while True:
         try:
             text = input('cmd > ')
-            result: Tuple[Any, ...] = par.parse(lex.tokenize(text))
-            if not result:
+            code: Tuple[Any, ...] = par.parse(lex.tokenize(text))
+            if not code:
                 continue
-            if result[0] == 'quit':
+            if code[0] == 'quit':
                 break
             else:
-                print(result)
-                handler = result[0]
-                args = result[1]
+                print(code)
+                handler = code[0]
+                args = code[1]
                 func[handler](args)
         except EOFError:
             break

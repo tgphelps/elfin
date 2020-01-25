@@ -53,6 +53,7 @@ def main() -> None:
         util.fatal(f"cannot open or init ELF {g.file}. Error: {err}")
     elf = Elf.Elf(g.file)
 
+    # commands.run_cmd("p hdr", elf)
     commands.run(elf)
 
     elf.close()
