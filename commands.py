@@ -17,8 +17,7 @@ g = Globals()
 
 def run_cmd(cmd: str, elf: Elf.Elf) -> None:
     g.elf = elf
-    g.elf.read_sht()
-    g.elf.read_pht()
+    g.elf.read_tables()
     lex = lexer.ElfLexer()  # type: ignore
     par = parser.ElfParser()  # type: ignore
     code: Tuple[Any, ...] = par.parse(lex.tokenize(cmd))
@@ -30,8 +29,7 @@ def run_cmd(cmd: str, elf: Elf.Elf) -> None:
 
 def run(elf: Elf.Elf) -> None:
     g.elf = elf
-    g.elf.read_sht()
-    g.elf.read_pht()
+    g.elf.read_tables()
     lex = lexer.ElfLexer()  # type: ignore
     par = parser.ElfParser()  # type: ignore
     while True:

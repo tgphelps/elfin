@@ -93,7 +93,8 @@ class Elf:
         self.e_shnum = l
         self.e_shstrndx = m
 
-    def read_sht(self):
+    def read_tables(self):
+        " Read the pht and sht, for future use."
         print("read sht")
         sht_size = self.e_shnum * self.e_shentsize
         assert sht_size > 0
@@ -101,7 +102,6 @@ class Elf:
         self.sht = self.elf.read(sht_size)
         assert len(self.sht) == sht_size
 
-    def read_pht(self):
         print("read pht")
         if self.e_phnum > 0:
             pht_size = self.e_phnum * self.e_phentsize
@@ -161,7 +161,7 @@ class Elf:
         sh_entsize = j
 
         if how == 0:
-            print(f"{n}: name={sh_name} type={sh_type} flags={sh_flags:#010x}")
+            print(f"{n}: name={sh_name} type={sh_type:#0x} size={sh_size} flags={sh_flags:#010x}")
         else:
             assert False
 
