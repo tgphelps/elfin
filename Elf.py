@@ -58,6 +58,7 @@ class Elf:
     def __init__(self, fname: str):
         self.sht = b''
         self.pht = b''
+        self.parse_complete = False
         self.elf = open(fname, 'rb')
         self.hdr = self.elf.read(HDR_SIZE)
         self.e_ident = self.hdr[0:16]
@@ -93,7 +94,7 @@ class Elf:
         self.e_shnum = l
         self.e_shstrndx = m
 
-    def read_tables(self):
+    def parse(self):
         " Read the pht and sht, for future use."
         print("read sht")
         sht_size = self.e_shnum * self.e_shentsize
@@ -110,6 +111,7 @@ class Elf:
             assert len(self.pht) == pht_size
         else:
             print("NO PHT")
+        self.parse_complete = True
 
     def get_shent(self, n: int) -> bytes:
         size = self.e_shentsize
@@ -161,7 +163,8 @@ class Elf:
         sh_entsize = j
 
         if how == 0:
-            print(f"{n}: name={sh_name} type={sh_type:#0x} size={sh_size} flags={sh_flags:#010x}")
+            print(f"{n}: name={sh_name} type={sh_type:#0x} "
+                  f"size={sh_size} flags={sh_flags:#010x}")
         else:
             assert False
 

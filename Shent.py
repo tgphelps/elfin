@@ -18,3 +18,7 @@ class Shent:
         self.sh_info = h
         self.sh_addralign = i
         self.sh_entsize = j
+
+    def __str__(self):
+        return f"name={self.sh_name} type={self.sh_type:#0x} " \
+               f"size={self.sh_size} flags={self.sh_flags:#010x}"
