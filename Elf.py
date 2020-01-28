@@ -60,6 +60,7 @@ class Elf:
     def __init__(self, fname: str):
         self.sht = b''
         self.pht = b''
+        self.str_tbl = b''
         self.shent: List[Shent] = []
         self.phent: List[Phent] = []
         self.parse_complete = False
@@ -122,7 +123,19 @@ class Elf:
         for n in range(self.e_phnum):
             self.phent.append(Phent(self.get_phent(n)))
 
+        self.read_string_table()
         self.parse_complete = True
+
+        # Use the string table to get section names.
+        for ent in self.shent:
+            ent.name = self.get_string(ent.sh_name)
+
+    def read_string_table(self):
+        st = self.e_shstrndx
+        sh = self.shent[st]
+        self.elf.seek(sh.sh_offset)
+        self.str_tbl = self.elf.read(sh.sh_size)
+        assert len(self.str_tbl) == sh.sh_size
 
     def get_shent(self, n: int) -> bytes:
         size = self.e_shentsize
@@ -154,50 +167,21 @@ class Elf:
         print(f"{self.e_shnum=}")
         print(f"{self.e_shstrndx=}")
 
+    def get_string(self, n: int) -> str:
+        "Return the string from the string table at index n."
+        # print(f"sh_name = {n}")
+        s = []
+        while True:
+            c = self.str_tbl[n]
+            if c:
+                s.append(chr(c))
+                n += 1
+            else:
+                return ''.join(s)
+
     def close(self) -> None:
         self.elf.close()
         # self.elf = None (type error)
-
-    def print_sht_entry(self, n: int, how: int) -> None:
-        ent = self.get_shent(n)
-        a, b, c, d, e, f, g, h, i, j = \
-            struct.unpack('<IIQQQQIIQQ', ent)
-        sh_name = a
-        sh_type = b
-        sh_flags = c
-        sh_addr = d
-        sh_offset = e
-        sh_size = f
-        sh_link = g
-        sh_info = h
-        sh_addralign = i
-        sh_entsize = j
-
-        if how == 0:
-            print(f"{n}: name={sh_name} type={sh_type:#0x} "
-                  f"size={sh_size} flags={sh_flags:#010x}")
-        else:
-            assert False
-
-    def print_pht_entry(self, n: int, how: int) -> None:
-        ent = self.get_phent(n)
-        a, b, c, d, e, f, g, h = \
-            struct.unpack("<IIQQQQQQ", ent)
-        p_type = a
-        p_flags = b
-        p_offset = c
-        p_vaddr = d
-        _ = e
-        p_filesz = f
-        p_memsz = g
-        p_align = h
-
-        if how == 0:
-            print(f"{n}: type={p_type:#0x} flags={p_flags:#010x} "
-                  f"off={p_offset:#010x} vaddr={p_vaddr:#010x} "
-                  f"memsz={p_memsz:#010x}")
-        else:
-            assert False
 
 
 if __name__ == '__main__':

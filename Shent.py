@@ -5,6 +5,7 @@ import struct
 class Shent:
     "Section header table entry"
     def __init__(self, ent: bytes):
+        self.name: str
         a, b, c, d, e, f, g, h, i, j = \
             struct.unpack('<IIQQQQIIQQ', ent)
         self.data = ent
@@ -20,5 +21,5 @@ class Shent:
         self.sh_entsize = j
 
     def __str__(self):
-        return f"name={self.sh_name} type={self.sh_type:#0x} " \
+        return f"name={self.name} type={self.sh_type:#0x} " \
                f"size={self.sh_size} flags={self.sh_flags:#010x}"

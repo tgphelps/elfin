@@ -6,7 +6,7 @@ from sly import Lexer
 
 
 class ElfLexer(Lexer):
-    tokens = {ID, PRINT, DUMP, QUIT, HELP, HDR, PHT, SHT, NUMBER}
+    tokens = {ID, PRINT, DUMP, QUIT, HELP, HDR, PHT, SHT, STR, NUMBER}
 
     ignore = ' \t'
 
@@ -28,6 +28,7 @@ class ElfLexer(Lexer):
     ID['hdr'] = HDR
     ID['pht'] = PHT
     ID['sht'] = SHT
+    ID['str'] = STR
 
     def error(self, t):
         print(f"Illegal character {t.value[0]}")

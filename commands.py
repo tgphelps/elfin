@@ -64,6 +64,8 @@ def cmd_print(obj: str) -> None:
     elif obj == 'pht':
         for n in range(g.elf.e_phnum):
             print(g.elf.phent[n])
+    elif obj == 'str':
+        Hex.dump(g.elf.str_tbl)
     else:
         assert False
 

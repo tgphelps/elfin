@@ -27,6 +27,7 @@ class ElfParser(Parser):
 
     @_('PRINT HDR',
        'PRINT PHT',
+       'PRINT STR',
        'PRINT SHT')
     def print_stmt(self, p):
         return ('print', p[1])
