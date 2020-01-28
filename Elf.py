@@ -4,10 +4,12 @@ Elf.py is a module for reading and decoding Intel x64 ELF files,
 both executable and relocatable.
 """
 
-from typing import Tuple
+from typing import Tuple, List
 
 import struct
 import sys
+from Phent import Phent
+from Shent import Shent
 
 # Constants
 HDR_SIZE = 64
@@ -58,6 +60,8 @@ class Elf:
     def __init__(self, fname: str):
         self.sht = b''
         self.pht = b''
+        self.shent: List[Shent] = []
+        self.phent: List[Phent] = []
         self.parse_complete = False
         self.elf = open(fname, 'rb')
         self.hdr = self.elf.read(HDR_SIZE)
@@ -95,13 +99,16 @@ class Elf:
         self.e_shstrndx = m
 
     def parse(self):
-        " Read the pht and sht, for future use."
+        " Read the pht, sht, and string table for future use."
         print("read sht")
         sht_size = self.e_shnum * self.e_shentsize
         assert sht_size > 0
         self.elf.seek(self.e_shoff, 0)
         self.sht = self.elf.read(sht_size)
         assert len(self.sht) == sht_size
+
+        for n in range(self.e_shnum):
+            self.shent.append(Shent(self.get_shent(n)))
 
         print("read pht")
         if self.e_phnum > 0:
@@ -111,6 +118,10 @@ class Elf:
             assert len(self.pht) == pht_size
         else:
             print("NO PHT")
+
+        for n in range(self.e_phnum):
+            self.phent.append(Phent(self.get_phent(n)))
+
         self.parse_complete = True
 
     def get_shent(self, n: int) -> bytes:

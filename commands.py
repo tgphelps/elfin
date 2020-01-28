@@ -60,10 +60,10 @@ def cmd_print(obj: str) -> None:
         g.elf.print_elf_hdr()
     elif obj == 'sht':
         for n in range(g.elf.e_shnum):
-            g.elf.print_sht_entry(n, 0)
+            print(g.elf.shent[n])
     elif obj == 'pht':
         for n in range(g.elf.e_phnum):
-            g.elf.print_pht_entry(n, 0)
+            print(g.elf.phent[n])
     else:
         assert False
 
