@@ -99,7 +99,7 @@ class Elf:
         self.e_shnum = l
         self.e_shstrndx = m
 
-    def parse(self):
+    def parse(self) -> None:
         " Read the pht, sht, and string table for future use."
         print("read sht")
         sht_size = self.e_shnum * self.e_shentsize
@@ -130,7 +130,7 @@ class Elf:
         for ent in self.shent:
             ent.name = self.get_string(ent.sh_name)
 
-    def read_string_table(self):
+    def read_string_table(self) -> None:
         st = self.e_shstrndx
         sh = self.shent[st]
         self.elf.seek(sh.sh_offset)

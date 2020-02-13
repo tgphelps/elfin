@@ -15,6 +15,7 @@ class ElfLexer(Lexer):
     @_(r'0[0-9a-fA-F]+',
        r'\d+')
     def NUMBER(self, t):
+        "Return int value, base 10 or 16."
         if t.value.startswith('0'):
             t.value = int(t.value, 16)
         else:

@@ -60,10 +60,10 @@ def cmd_print(obj: str) -> None:
         g.elf.print_elf_hdr()
     elif obj == 'sht':
         for n in range(g.elf.e_shnum):
-            print(g.elf.shent[n])
+            print(f"{n}:", g.elf.shent[n])
     elif obj == 'pht':
         for n in range(g.elf.e_phnum):
-            print(g.elf.phent[n])
+            print(f"{n}:", g.elf.phent[n])
     elif obj == 'str':
         Hex.dump(g.elf.str_tbl)
     else:
